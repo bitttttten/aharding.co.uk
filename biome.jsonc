@@ -5,6 +5,11 @@
 		"clientKind": "git",
 		"useIgnoreFile": true
 	},
+	"javascript": {
+		"formatter": {
+			"semicolons": "asNeeded"
+		}
+	},
 	"files": { "ignoreUnknown": false, "ignore": [] },
 	"formatter": { "enabled": true },
 	"organizeImports": { "enabled": true },

@@ -44,3 +44,9 @@ yarn-error.log*
 
 # idea files
 .idea
+
+# sanity things
+schema.json
+
+# don't commit codegen things
+src/gen/

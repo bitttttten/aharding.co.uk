@@ -1,6 +1,16 @@
 @import "tailwindcss";
 
 @theme {
-	--font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
-		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+	--color-primary: #374151;
+	--color-secondary: #da9ba8;
+}
+
+@layer base {
+	body {
+		@apply text-primary;
+	}
+
+	a {
+		@apply hover:text-secondary;
+	}
 }
