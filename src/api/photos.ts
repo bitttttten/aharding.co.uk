@@ -1,13 +1,15 @@
 import { client } from "@/lib/sanity"
 import { defineQuery } from "groq"
+import type { TypedObject } from "sanity"
 
 const homepageAlbumsQuery = defineQuery(
-	'*[_type == "album"]{ _id, title, images, order }',
+	'*[_type == "album"]{ _id, title, images, order, excerpt }',
 )
 
 interface HomepageAlbum {
 	_id: string
 	title: string
+	excerpt: TypedObject | TypedObject[]
 	images: {
 		_key: string
 		asset: {

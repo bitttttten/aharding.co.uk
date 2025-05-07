@@ -16,6 +16,7 @@
 		"postinstall": "pnpm run codegen"
 	},
 	"dependencies": {
+		"@portabletext/react": "^3.2.1",
 		"@sanity/client": "^7.1.0",
 		"@sanity/image-url": "^1.1.0",
 		"@t3-oss/env-nextjs": "^0.12.0",
