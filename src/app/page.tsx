@@ -5,14 +5,14 @@ export default async function HomePage() {
 	const albums = await getHomepageAlbums()
 	const height = 800
 	return (
-		<main className="flex flex-col gap-30 px-4">
+		<main className="flex flex-col gap-30">
 			{albums.map((album) => (
 				<div
 					key={album._id}
-					className="flex w-full flex-row gap-25 overflow-x-auto py-[var(--body-gutter)]"
+					className="relative flex w-full flex-row gap-25 overflow-x-auto px-4 py-[var(--body-gutter)]"
 				>
 					{album.images.map((image) => (
-						<div key={image._key} className="relative isolate contents">
+						<div key={image._key} className="contents">
 							<img
 								src={urlFor(image.asset._ref)
 									.height(height * 2)
@@ -28,9 +28,9 @@ export default async function HomePage() {
 								loading="lazy"
 								decoding="async"
 							/>
-							<div className="absolute" />
 						</div>
 					))}
+					<div className="absolute inset-0" />
 				</div>
 			))}
 		</main>
