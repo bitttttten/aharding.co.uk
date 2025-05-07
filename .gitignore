@@ -50,3 +50,6 @@ schema.json
 
 # don't commit codegen things
 src/gen/
+
+# Local Netlify folder
+.netlify
