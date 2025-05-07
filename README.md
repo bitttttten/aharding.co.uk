@@ -1,6 +1,6 @@
 # aharding.co.uk
 
-This is the homepage to [aharding.co.uk](https://aharding.co.uk)].
+This is the homepage to [aharding.co.uk](https://aharding.co.uk).
 
 ## What's inside?
 
