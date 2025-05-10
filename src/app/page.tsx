@@ -10,26 +10,28 @@ export default async function HomePage() {
 			{albums.map((album) => (
 				<div key={album._id}>
 					<div className="relative flex w-full flex-row gap-25 overflow-x-auto px-4 py-[var(--body-gutter)]">
-						{album.images.map((image) => (
-							<div key={image._key} className="contents">
-								<img
-									src={urlFor(image.asset._ref)
-										.height(height * 2)
-										.url()}
-									alt="Photography"
-									height={height}
-									width={getWidth({ height, src: image.asset._ref })}
-									style={{
-										// @ts-ignore css classes
-										"--h":
-											"calc(100lvh - var(--header-height) - calc(var(--body-gutter) * 2))",
-									}}
-									className="h-[var(--h)] max-h-[400px] w-auto lg:max-h-[750px]"
-									loading="lazy"
-									decoding="async"
-								/>
-							</div>
-						))}
+						{album.images.map((image) => {
+							const imageDimensions = getImageDimensions({ height, src: image.asset._ref })
+							return (
+								<div key={image._key} className="contents">
+									<img
+										src={urlFor(image.asset._ref)
+											.height(imageDimensions.height * 2)
+											.width(imageDimensions.width * 2)
+											.url()}
+										alt="Photography"
+										height={imageDimensions.height}
+										width={imageDimensions.width}
+										style={{
+											// @ts-ignore css classes
+											"--h": "calc(100lvh - var(--header-height) - calc(var(--body-gutter) * 2))",
+										}}
+										className="h-[var(--h)] max-h-[400px] w-auto lg:max-h-[750px]"
+										loading="lazy"
+										decoding="async" />
+								</div>
+							)
+						})}
 						<div className="absolute inset-0" />
 					</div>
 					<div className="flex gap-2 px-4 text-sm">
@@ -41,16 +43,13 @@ export default async function HomePage() {
 	)
 }
 
-// a `_ref` from sanity is like "image-1d47584394432100af92243d418a520af114b23a-4492x6774-jpg"
-// where 4492 is the width and 6774 is the height
-// we want to get the width of the image based on the height, to work out the aspect ratio
-// to find the target width
-function getWidth({ height, src }: { height: number; src: string }) {
+
+function getImageDimensions({ height, src }: { height: number; src: string }) {
 	const segments = src.split("-")
 	const widthAndHeight = segments[segments.length - 2]
 	const [sourceWidth = "1", sourceHeight = "1"] =
 		widthAndHeight?.split("x") ?? []
 	const aspectRatio =
 		Number.parseInt(sourceWidth) / Number.parseInt(sourceHeight)
-	return height * aspectRatio
+	return { aspectRatio, width: height * aspectRatio, height }
 }
