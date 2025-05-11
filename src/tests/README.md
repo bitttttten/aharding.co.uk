@@ -5,7 +5,7 @@ This directory contains integration tests for the application using Vitest with 
 ## Test Structure
 
 - `setup.ts`: Contains test environment configuration, environment variables, and MSW server setup
-- `interceptors/`: Contains helpers for mocking API requests without mocking modules
+- `mocks/`: Contains helpers for mocking API requests without mocking modules
 - `*.test.tsx`: Individual test files for various features
 
 ## Running Tests
@@ -30,5 +30,5 @@ When creating new tests:
 
 1. Create a new `feature-name.test.tsx` file
 2. Use the ServerComponentWrapper for testing Server Components
-3. Use interceptors for mocking API responses
+3. Use mocks for mocking API responses
 4. Focus on user journeys and interactions 

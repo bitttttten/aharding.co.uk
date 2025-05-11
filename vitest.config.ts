@@ -8,7 +8,7 @@ export default defineConfig({
     environment: 'happy-dom',
     browser: {
       enabled: true,
-      name: 'chrome', // or 'firefox', 'safari'
+      name: 'chrome',
       provider: 'webdriverio',
     },
     globals: true,
@@ -19,7 +19,6 @@ export default defineConfig({
       happyDOM: {
         console: 'capture',
         settings: {
-          // Enable required browser APIs
           enableGlobalFetch: true,
           enableJSDOM: true,
         },
