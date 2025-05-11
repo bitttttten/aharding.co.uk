@@ -51,5 +51,5 @@ function getImageDimensions({ height, src }: { height: number; src: string }) {
 		widthAndHeight?.split("x") ?? []
 	const aspectRatio =
 		Number.parseInt(sourceWidth) / Number.parseInt(sourceHeight)
-	return { aspectRatio, width: height * aspectRatio, height }
+	return { aspectRatio, width: Math.round(height * aspectRatio), height }
 }
