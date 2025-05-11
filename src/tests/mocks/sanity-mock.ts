@@ -1,15 +1,6 @@
 import { HttpResponse, http } from 'msw'
 import { server } from '../setup'
 
-export type SanityResponseHandler = (url: string, request: Request) => Response | Promise<Response>
-
-export function interceptSanityRequests(responseHandler: SanityResponseHandler) {
-  server.use(
-    http.all('https://*.apicdn.sanity.io/*', responseHandler),
-    http.all('https://*.api.sanity.io/*', responseHandler)
-  )
-}
-
 export function createMockAlbums(count = 2, imagesPerAlbum = 3) {
   return Array(count).fill(0).map((_, i) => ({
     _id: `album-${i}`,
@@ -29,13 +20,14 @@ export function createMockAlbums(count = 2, imagesPerAlbum = 3) {
 export function mockAlbumsResponse() {
   const mockAlbums = createMockAlbums()
   
-  interceptSanityRequests((url, request) => {
-    if (request.method === 'GET' && url.includes('*%5B_type%20%3D%3D%20%22album%22%5D')) {
+  server.use(
+    http.get('https://*.api.sanity.io/*%5B_type%20%3D%3D%20%22album%22%5D*', () => {
       return HttpResponse.json(mockAlbums)
-    }
-    
-    return HttpResponse.json({ error: 'Not mocked' }, { status: 404 })
-  })
+    }),
+    http.get('https://*.apicdn.sanity.io/*%5B_type%20%3D%3D%20%22album%22%5D*', () => {
+      return HttpResponse.json(mockAlbums)
+    })
+  )
   
   return mockAlbums
 } 

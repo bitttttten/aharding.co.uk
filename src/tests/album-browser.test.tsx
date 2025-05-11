@@ -2,8 +2,9 @@ import { describe, test, expect, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import HomePage from '@/app/page'
-import { createMockAlbums, interceptSanityRequests } from './mocks/sanity-mock'
-import { HttpResponse } from 'msw'
+import { createMockAlbums } from './mocks/sanity-mock'
+import { HttpResponse, http } from 'msw'
+import { server } from './setup'
 
 const ServerComponentWrapper = async ({ children }: { children: Promise<React.ReactNode> }) => {
   const resolvedChildren = await children
@@ -14,13 +15,14 @@ describe.browser('Album Display Browser Integration', async () => {
   beforeEach(() => {
     const mockAlbums = createMockAlbums(2, 10)
     
-    interceptSanityRequests((url) => {
-      if (url.includes('*%5B_type%20%3D%3D%20%22album%22%5D')) {
+    server.use(
+      http.get('https://*.api.sanity.io/*%5B_type%20%3D%3D%20%22album%22%5D*', () => {
         return HttpResponse.json(mockAlbums)
-      }
-      
-      return HttpResponse.json({ error: 'Not mocked' }, { status: 404 })
-    })
+      }),
+      http.get('https://*.apicdn.sanity.io/*%5B_type%20%3D%3D%20%22album%22%5D*', () => {
+        return HttpResponse.json(mockAlbums)
+      })
+    )
   })
 
   test('horizontal scrolling works in album display', async () => {
