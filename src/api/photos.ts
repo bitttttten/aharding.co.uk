@@ -3,7 +3,7 @@ import { defineQuery } from "groq"
 import type { TypedObject } from "sanity"
 
 const homepageAlbumsQuery = defineQuery(
-	'*[_type == "album"]{ _id, title, images, order, excerpt } | order(_createdAt desc)',
+	'*[_type == "album"]{ _id, title, images, order, excerpt, visible } | order(_createdAt desc)',
 )
 
 interface HomepageAlbum {
@@ -12,11 +12,12 @@ interface HomepageAlbum {
 	excerpt: TypedObject | TypedObject[]
 	images: {
 		_key: string
+		visible: boolean
 		asset: {
 			_ref: string
 		}
 	}[]
-	order: number
+	order: string
 }
 
 type HomepageAlbumsQuery = HomepageAlbum[]
@@ -24,5 +25,13 @@ type HomepageAlbumsQuery = HomepageAlbum[]
 export async function getHomepageAlbums(): Promise<HomepageAlbumsQuery> {
 	return await client
 		.fetch(homepageAlbumsQuery)
-		.then((albums: HomepageAlbumsQuery) => albums.sort((a, b) => b.order - a.order))
+		.then((albums: HomepageAlbumsQuery) =>
+			albums.sort((a, b) => Number.parseInt(b.order) - Number.parseInt(a.order)),
+		)
+		.then((albums: HomepageAlbumsQuery) =>
+			albums.filter((album) => ({
+				...album,
+				images: album.images.filter((image) => image.visible),
+			})),
+		)
 }
