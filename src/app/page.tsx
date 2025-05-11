@@ -23,10 +23,10 @@ export default async function HomePage() {
 										height={imageDimensions.height}
 										width={imageDimensions.width}
 										style={{
-											// @ts-ignore css classes
+											// @ts-ignore css variables
 											"--h": "calc(100lvh - var(--header-height) - calc(var(--body-gutter) * 2))",
 										}}
-										className="h-[var(--h)] max-h-[400px] w-auto lg:max-h-[750px]"
+										className="h-[var(--h)] max-h-[200px] w-auto lg:max-h-[400px] 2xl:max-h-[650px]"
 										loading="lazy"
 										decoding="async" />
 								</div>
