@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import HomePage from '@/app/page'
 import { createMockAlbums } from './mocks/sanity-mock'
@@ -29,7 +29,7 @@ describe.browser('Album Display Browser Integration', async () => {
     const user = userEvent.setup()
     const homePagePromise = HomePage()
     
-    const { container } = render(
+    render(
       <ServerComponentWrapper>
         {homePagePromise}
       </ServerComponentWrapper>
@@ -37,26 +37,31 @@ describe.browser('Album Display Browser Integration', async () => {
     
     await homePagePromise
     
-    const albumContainers = container.querySelectorAll('.overflow-x-auto')
-    expect(albumContainers.length).toBeGreaterThan(0)
+    // Find the main element which should contain the albums
+    const main = screen.getByRole('main')
     
-    const firstAlbumContainer = albumContainers[0]
+    // Get the first album gallery by finding the parent of album title
+    const albumTitle = screen.getByText('Album 1')
+    const albumDiv = albumTitle.closest('div')
     
-    const initialScrollLeft = firstAlbumContainer.scrollLeft
+    // Find the scroll container within the album using data-testid
+    const albumGallery = within(albumDiv).getByTestId('album-gallery')
+    
+    const initialScrollLeft = albumGallery.scrollLeft
     
     await user.pointer([
-      { target: firstAlbumContainer, keys: '[MouseLeft>]' },
-      { pointerName: 'mouse', target: firstAlbumContainer, wheel: { deltaX: 100 } },
-      { pointerName: 'mouse', target: firstAlbumContainer, keys: '[/MouseLeft]' }
+      { target: albumGallery, keys: '[MouseLeft>]' },
+      { pointerName: 'mouse', target: albumGallery, wheel: { deltaX: 100 } },
+      { pointerName: 'mouse', target: albumGallery, keys: '[/MouseLeft]' }
     ])
     
-    expect(firstAlbumContainer.scrollLeft).toBeGreaterThan(initialScrollLeft)
+    expect(albumGallery.scrollLeft).toBeGreaterThan(initialScrollLeft)
   })
   
   test('images load and display correctly', async () => {
     const homePagePromise = HomePage()
     
-    const { container } = render(
+    render(
       <ServerComponentWrapper>
         {homePagePromise}
       </ServerComponentWrapper>
@@ -64,12 +69,17 @@ describe.browser('Album Display Browser Integration', async () => {
     
     await homePagePromise
     
-    const images = container.querySelectorAll('img')
+    // Check if album titles are present
+    expect(screen.getByText('Album 1')).toBeInTheDocument()
+    expect(screen.getByText('Album 2')).toBeInTheDocument()
+    
+    // Get all images
+    const images = screen.getAllByAltText('Photography')
     expect(images.length).toBe(20)
     
+    // Check image attributes
     for (const img of images) {
       expect(img).toHaveAttribute('src')
-      expect(img).toHaveAttribute('alt', 'Photography')
       expect(img).toHaveAttribute('loading', 'lazy')
       expect(img).toHaveAttribute('decoding', 'async')
     }
