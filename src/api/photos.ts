@@ -25,8 +25,14 @@ type HomepageAlbumsQuery = HomepageAlbum[]
 export async function getHomepageAlbums(): Promise<HomepageAlbumsQuery> {
 	return await client
 		.fetch(homepageAlbumsQuery)
+		.then((c) => {
+			console.log("c is", c)
+			return c
+		})
 		.then((albums: HomepageAlbumsQuery) =>
-			albums.sort((a, b) => Number.parseInt(b.order) - Number.parseInt(a.order)),
+			albums.sort(
+				(a, b) => Number.parseInt(b.order) - Number.parseInt(a.order),
+			),
 		)
 		.then((albums: HomepageAlbumsQuery) =>
 			albums.filter((album) => ({

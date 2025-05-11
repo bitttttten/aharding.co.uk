@@ -1,6 +1,6 @@
 {
-	"name": "aharding.co.uk-next",
-	"version": "0.1.0",
+	"name": "aharding.co.uk",
+	"version": "1337.1338.1339",
 	"private": true,
 	"type": "module",
 	"scripts": {
@@ -14,11 +14,7 @@
 		"start": "next start",
 		"typecheck": "tsc --noEmit",
 		"postinstall": "pnpm run codegen",
-		"test": "vitest run",
-		"test:watch": "vitest",
-		"test:ui": "vitest --ui",
-		"test:browser": "vitest run --browser",
-		"test:basic": "node --experimental-vm-modules node_modules/vitest/vitest.mjs"
+		"test": "vitest run"
 	},
 	"dependencies": {
 		"@portabletext/react": "^3.2.1",
@@ -43,7 +39,6 @@
 		"@types/react": "^19.0.0",
 		"@types/react-dom": "^19.0.0",
 		"@vitejs/plugin-react": "^4.2.1",
-		"@vitest/browser": "^1.2.2",
 		"@vitest/ui": "^1.2.2",
 		"dotenv": "^16.4.1",
 		"framer-motion": "^12.10.1",
@@ -55,8 +50,7 @@
 		"tailwindcss": "^4.0.15",
 		"tiny-invariant": "^1.3.3",
 		"typescript": "^5.8.2",
-		"vitest": "^1.2.2",
-		"webdriverio": "^9.12.7"
+		"vitest": "^1.2.2"
 	},
 	"ct3aMetadata": {
 		"initVersion": "7.39.3"

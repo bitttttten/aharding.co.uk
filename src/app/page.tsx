@@ -2,19 +2,23 @@ import { getHomepageAlbums } from "@/api/photos"
 import { urlFor } from "@/lib/sanity-image"
 import { PortableText } from "@portabletext/react"
 
+const height = 800
+
 export default async function HomePage() {
 	const albums = await getHomepageAlbums()
-	const height = 800
 	return (
 		<main className="flex flex-col gap-6 pb-10 md:gap-20 lg:gap-30">
 			{albums.map((album) => (
 				<div key={album._id}>
-					<div 
+					<div
 						data-testid="album-gallery"
 						className="relative flex w-full flex-row gap-10 overflow-x-auto px-4 py-[var(--body-gutter)] md:gap-20 lg:gap-25"
 					>
 						{album.images.map((image) => {
-							const imageDimensions = getImageDimensions({ height, src: image.asset._ref })
+							const imageDimensions = getImageDimensions({
+								height,
+								src: image.asset._ref,
+							})
 							return (
 								<div key={image._key} className="contents">
 									<img
@@ -27,11 +31,13 @@ export default async function HomePage() {
 										width={imageDimensions.width}
 										style={{
 											// @ts-ignore css variables
-											"--h": "calc(100lvh - var(--header-height) - calc(var(--body-gutter) * 2))",
+											"--h":
+												"calc(100lvh - var(--header-height) - calc(var(--body-gutter) * 2))",
 										}}
 										className="h-[var(--h)] max-h-[200px] w-auto max-w-max md:max-h-[400px] lg:max-h-[550px] xl:max-h-[600px] 2xl:max-h-[650px]"
 										loading="lazy"
-										decoding="async" />
+										decoding="async"
+									/>
 								</div>
 							)
 						})}
@@ -45,7 +51,6 @@ export default async function HomePage() {
 		</main>
 	)
 }
-
 
 function getImageDimensions({ height, src }: { height: number; src: string }) {
 	const segments = src.split("-")

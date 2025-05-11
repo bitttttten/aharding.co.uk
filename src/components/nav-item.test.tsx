@@ -1,50 +1,55 @@
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { describe, expect, test, vi } from 'vitest'
-import { NavItem } from './nav-item'
+import { HeaderContextProvider } from "@/context/header"
+import { render, screen, waitFor } from "@testing-library/react"
+import userEvent from "@testing-library/user-event"
+import { describe, expect, test, vi } from "vitest"
+import { NavItem } from "./nav-item"
 
-// Mock the next/navigation module
-vi.mock('next/navigation', () => ({
-  usePathname: () => '/',
+vi.mock("next/navigation", () => ({
+	usePathname: () => "/",
 }))
 
-// Mock the header context
-vi.mock('@/context/header', () => ({
-  useHeaderContext: () => ({
-    hover: null,
-    setHover: vi.fn(),
-  }),
-}))
+describe("NavItem", () => {
+	test("renders link with correct text", () => {
+		render(
+			<HeaderContextProvider>
+				<NavItem href="/test">Test Link</NavItem>
+			</HeaderContextProvider>,
+		)
 
-describe('NavItem', () => {
-  test('renders link with correct text', () => {
-    render(<NavItem href="/test">Test Link</NavItem>)
-    
-    const link = screen.getByText('Test Link')
-    expect(link).toBeInTheDocument()
-    expect(link.closest('a')).toHaveAttribute('href', '/test')
-  })
+		const link = screen.getByText("Test Link")
+		expect(link).toBeInTheDocument()
+		expect(link.closest("a")).toHaveAttribute("href", "/test")
+	})
 
-  test('handles mouse events', async () => {
-    const user = userEvent.setup()
-    
-    // We need to mock the useHeaderContext with a real mock function to verify calls
-    const mockSetHover = vi.fn()
-    vi.mocked(require('@/context/header').useHeaderContext).mockReturnValue({
-      hover: null,
-      setHover: mockSetHover,
-    })
-    
-    render(<NavItem href="/test">Test Link</NavItem>)
-    
-    const link = screen.getByText('Test Link')
-    
-    // Hover over the link
-    await user.hover(link)
-    expect(mockSetHover).toHaveBeenCalledWith('/test')
-    
-    // Move away from the link
-    await user.unhover(link)
-    expect(mockSetHover).toHaveBeenCalledWith(null)
-  })
-}) 
+	test("handles mouse events", async () => {
+		const user = userEvent.setup()
+		const mockSetHover = vi.fn()
+
+		render(
+			<HeaderContextProvider hover={null} setHover={mockSetHover}>
+				<NavItem href="/test">Test Link</NavItem>
+				<NavItem href="/">Home Link</NavItem>
+			</HeaderContextProvider>,
+		)
+
+		const homeLink = screen.getByText("Home Link")
+		const testLink = screen.getByText("Test Link")
+
+		await user.hover(homeLink)
+		expect(mockSetHover).toHaveBeenNthCalledWith(1, "/")
+
+		await user.unhover(homeLink)
+
+		expect(mockSetHover).toHaveBeenNthCalledWith(2, null)
+
+		expect(mockSetHover).toHaveBeenCalledTimes(2)
+
+		// unhover does not fire for test link since it's not the current path.
+		// we want to keep the "last focused element" as the "active" one
+		await user.hover(testLink)
+		await user.unhover(testLink)
+
+		expect(mockSetHover).toHaveBeenNthCalledWith(3, "/test")
+		expect(mockSetHover).toHaveBeenCalledTimes(3)
+	})
+})

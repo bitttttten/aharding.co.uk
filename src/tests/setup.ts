@@ -1,29 +1,23 @@
-import { expect, afterEach, beforeAll, afterAll, vi } from 'vitest'
-import { cleanup } from '@testing-library/react'
-import { setupServer } from 'msw/node'
-import '@testing-library/jest-dom'
-import dotenv from 'dotenv'
+import "@testing-library/jest-dom"
+import { cleanup } from "@testing-library/react"
+import dotenv from "dotenv"
+import { afterAll, afterEach, beforeAll, vi } from "vitest"
+import { server } from "./server"
 
-dotenv.config({ path: '.env.test' })
-
-if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID) {
-  process.env.NEXT_PUBLIC_SANITY_PROJECT_ID = 'test-project-id'
-}
-
-if (!process.env.NEXT_PUBLIC_SANITY_DATASET) {
-  process.env.NEXT_PUBLIC_SANITY_DATASET = 'test-dataset'
-}
+dotenv.config({ path: [".env.test", ".env.local", ".env"] })
 
 afterEach(() => {
-  cleanup()
+	cleanup()
 })
 
-export const server = setupServer()
-
-beforeAll(() => 
-  server.listen({ 
-    onUnhandledRequest: 'error' 
-  })
+beforeAll(() =>
+	server.listen({
+		onUnhandledRequest: "error",
+	}),
 )
 afterEach(() => server.resetHandlers())
-afterAll(() => server.close()) 
+afterAll(() => server.close())
+
+vi.mock("server-only", () => {
+	return {}
+})

@@ -10,11 +10,25 @@ const HeaderContext = React.createContext<{
 
 export function HeaderContextProvider({
 	children,
-}: { children: React.ReactNode }) {
+	hover: hoverFromProps,
+	setHover: setHoverFromProps,
+}: {
+	children: React.ReactNode
+	hover?: string | null
+	setHover?: (hover: string | null) => void
+}) {
 	const [hover, setHover] = React.useState<string | null>(null)
 
+	const isControlled =
+		hoverFromProps !== undefined && setHoverFromProps !== undefined
+
 	return (
-		<HeaderContext.Provider value={{ hover, setHover }}>
+		<HeaderContext.Provider
+			value={{
+				hover: isControlled ? hoverFromProps : hover,
+				setHover: isControlled ? setHoverFromProps : setHover,
+			}}
+		>
 			{children}
 		</HeaderContext.Provider>
 	)
