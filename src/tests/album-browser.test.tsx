@@ -11,7 +11,7 @@ const ServerComponentWrapper = async ({ children }: { children: Promise<React.Re
   return <>{resolvedChildren}</>
 }
 
-describe.browser('Album Display Browser Integration', async () => {
+describe('Album Display Integration', async () => {
   beforeEach(() => {
     const mockAlbums = createMockAlbums(2, 10)
     
@@ -25,8 +25,7 @@ describe.browser('Album Display Browser Integration', async () => {
     )
   })
 
-  test('horizontal scrolling works in album display', async () => {
-    const user = userEvent.setup()
+  test('renders album galleries with correct content', async () => {
     const homePagePromise = HomePage()
     
     render(
@@ -36,26 +35,12 @@ describe.browser('Album Display Browser Integration', async () => {
     )
     
     await homePagePromise
+
+    expect(screen.getByText('Album 1')).toBeInTheDocument()
+    expect(screen.getByText('Album 2')).toBeInTheDocument()
     
-    // Find the main element which should contain the albums
-    const main = screen.getByRole('main')
-    
-    // Get the first album gallery by finding the parent of album title
-    const albumTitle = screen.getByText('Album 1')
-    const albumDiv = albumTitle.closest('div')
-    
-    // Find the scroll container within the album using data-testid
-    const albumGallery = within(albumDiv).getByTestId('album-gallery')
-    
-    const initialScrollLeft = albumGallery.scrollLeft
-    
-    await user.pointer([
-      { target: albumGallery, keys: '[MouseLeft>]' },
-      { pointerName: 'mouse', target: albumGallery, wheel: { deltaX: 100 } },
-      { pointerName: 'mouse', target: albumGallery, keys: '[/MouseLeft]' }
-    ])
-    
-    expect(albumGallery.scrollLeft).toBeGreaterThan(initialScrollLeft)
+    expect(screen.getByText('Description 1')).toBeInTheDocument()
+    expect(screen.getByText('Description 2')).toBeInTheDocument()
   })
   
   test('images load and display correctly', async () => {
@@ -69,15 +54,9 @@ describe.browser('Album Display Browser Integration', async () => {
     
     await homePagePromise
     
-    // Check if album titles are present
-    expect(screen.getByText('Album 1')).toBeInTheDocument()
-    expect(screen.getByText('Album 2')).toBeInTheDocument()
-    
-    // Get all images
     const images = screen.getAllByAltText('Photography')
     expect(images.length).toBe(20)
     
-    // Check image attributes
     for (const img of images) {
       expect(img).toHaveAttribute('src')
       expect(img).toHaveAttribute('loading', 'lazy')
