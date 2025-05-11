@@ -3,7 +3,7 @@ import { defineQuery } from "groq"
 import type { TypedObject } from "sanity"
 
 const homepageAlbumsQuery = defineQuery(
-	'*[_type == "album"]{ _id, title, images, order, excerpt }',
+	'*[_type == "album"]{ _id, title, images, order, excerpt } | order(_createdAt desc)',
 )
 
 interface HomepageAlbum {
