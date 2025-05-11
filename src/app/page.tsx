@@ -6,10 +6,10 @@ export default async function HomePage() {
 	const albums = await getHomepageAlbums()
 	const height = 800
 	return (
-		<main className="flex flex-col gap-30 pb-10">
+		<main className="flex flex-col gap-6 pb-10 md:gap-20 lg:gap-30">
 			{albums.map((album) => (
 				<div key={album._id}>
-					<div className="relative flex w-full flex-row gap-25 overflow-x-auto px-4 py-[var(--body-gutter)]">
+					<div className="relative flex w-full flex-row gap-10 overflow-x-auto px-4 py-[var(--body-gutter)] md:gap-20 lg:gap-25">
 						{album.images.map((image) => {
 							const imageDimensions = getImageDimensions({ height, src: image.asset._ref })
 							return (
