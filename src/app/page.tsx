@@ -8,7 +8,7 @@ export default async function HomePage() {
 	const albums = await getHomepageAlbums()
 	return (
 		<main className="flex flex-col gap-6 pb-10 md:gap-20 lg:gap-30">
-			{albums.map((album) => (
+			{albums.map((album, index) => (
 				<div key={album._id}>
 					<div
 						data-testid="album-gallery"
@@ -34,8 +34,8 @@ export default async function HomePage() {
 											"--h":
 												"calc(100lvh - var(--header-height) - calc(var(--body-gutter) * 2))",
 										}}
-										className="h-[var(--h)] max-h-[200px] w-auto max-w-max md:max-h-[400px] lg:max-h-[550px] xl:max-h-[600px] 2xl:max-h-[650px]"
-										loading="lazy"
+										className="h-[var(--h)] max-h-[200px] w-auto max-w-max bg-gray-200 md:max-h-[400px] lg:max-h-[550px] xl:max-h-[600px] 2xl:max-h-[650px]"
+										loading={index < 2 ? "eager" : "lazy"}
 										decoding="async"
 									/>
 								</div>
