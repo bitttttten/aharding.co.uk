@@ -2,6 +2,8 @@ import { getHomepageAlbums } from "@/api/photos"
 import { urlFor } from "@/lib/sanity-image"
 import { PortableText } from "@portabletext/react"
 
+const heights = [200, 400, 550, 600, 650, 1000]
+
 export default async function HomePage() {
 	const albums = await getHomepageAlbums()
 	return (
@@ -17,6 +19,19 @@ export default async function HomePage() {
 								height: 500,
 								src: image.asset._ref,
 							})
+							
+							const srcSet = heights
+								.map(h => {
+									const w = Math.round(h * imageDimensions.aspectRatio)
+									return `${urlFor(image.asset._ref)
+										.height(h * 2)
+										.width(w * 2)
+										.format("webp")
+										.quality(95)
+										.url()} ${w}w`
+								})
+								.join(", ")
+								
 							return (
 								<div key={image._key} className="contents">
 									<img
@@ -26,6 +41,8 @@ export default async function HomePage() {
 											.format("webp")
 											.quality(95)
 											.url()}
+										srcSet={srcSet}
+										sizes="(max-width: 640px) calc(200px * aspect-ratio), (max-width: 768px) calc(400px * aspect-ratio), (max-width: 1024px) calc(550px * aspect-ratio), (max-width: 1280px) calc(600px * aspect-ratio), calc(650px * aspect-ratio)"
 										alt="Photography"
 										height={imageDimensions.height}
 										width={imageDimensions.width}
