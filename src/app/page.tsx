@@ -2,7 +2,7 @@ import { getHomepageAlbums } from "@/api/photos"
 import { urlFor } from "@/lib/sanity-image"
 import { PortableText } from "@portabletext/react"
 
-const heights = [200, 400, 550, 600, 650, 1000]
+const heights = [400, 650]
 
 export default async function HomePage() {
 	const albums = await getHomepageAlbums()
@@ -24,8 +24,8 @@ export default async function HomePage() {
 								.map(h => {
 									const w = Math.round(h * imageDimensions.aspectRatio)
 									return `${urlFor(image.asset._ref)
-										.height(h * 2)
-										.width(w * 2)
+										.height(h)
+										.width(w)
 										.format("webp")
 										.quality(95)
 										.url()} ${w}w`
@@ -42,7 +42,7 @@ export default async function HomePage() {
 											.quality(95)
 											.url()}
 										srcSet={srcSet}
-										sizes="(max-width: 640px) calc(200px * aspect-ratio), (max-width: 768px) calc(400px * aspect-ratio), (max-width: 1024px) calc(550px * aspect-ratio), (max-width: 1280px) calc(600px * aspect-ratio), calc(650px * aspect-ratio)"
+										sizes={`(max-width: 768px) ${Math.round(400 * imageDimensions.aspectRatio)}px, ${Math.round(650 * imageDimensions.aspectRatio)}px`}
 										alt="Photography"
 										height={imageDimensions.height}
 										width={imageDimensions.width}
@@ -51,14 +51,14 @@ export default async function HomePage() {
 											"--h":
 												"calc(100lvh - var(--header-height) - calc(var(--body-gutter) * 2))",
 										}}
-										className="h-[var(--h)] max-h-[200px] w-auto max-w-max bg-gray-200 md:max-h-[400px] lg:max-h-[550px] xl:max-h-[600px] 2xl:max-h-[650px]"
+										className="h-[var(--h)] max-h-[400px] w-auto max-w-max bg-gray-200 lg:max-h-[650px]"
 										loading={index < 2 ? "eager" : "lazy"}
 										decoding="async"
 									/>
 								</div>
 							)
 						})}
-						<div className="absolute inset-0" />
+						{process.env.NODE_ENV === 'production' ?<div className="absolute inset-0" />:null}
 					</div>
 					<div className="flex gap-2 px-4 text-sm">
 						<p>{album.title}</p> - <PortableText value={album.excerpt} />
