@@ -3,8 +3,8 @@ import { urlFor } from "@/lib/sanity-image"
 import { PortableText } from "@portabletext/react"
 
 const heights = [
-	{ size: 400, pixelRatio: 1.75 },
-	{ size: 650, pixelRatio: 1.5 },
+	{ size: 400, pixelRatio: 1.5 },
+	{ size: 650, pixelRatio: 1.25 },
 ]
 
 export default async function HomePage() {
