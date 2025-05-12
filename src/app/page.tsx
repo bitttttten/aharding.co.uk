@@ -2,7 +2,10 @@ import { getHomepageAlbums } from "@/api/photos"
 import { urlFor } from "@/lib/sanity-image"
 import { PortableText } from "@portabletext/react"
 
-const heights = [400, 650]
+const heights = [
+	{ size: 400, pixelRatio: 1.75 },
+	{ size: 650, pixelRatio: 1.5 },
+]
 
 export default async function HomePage() {
 	const albums = await getHomepageAlbums()
@@ -10,27 +13,25 @@ export default async function HomePage() {
 		<main className="flex flex-col gap-6 pb-10 md:gap-20 lg:gap-30">
 			{albums.map((album, index) => (
 				<div key={album._id}>
-					<div
-						className="relative flex w-full flex-row gap-10 overflow-x-auto px-4 py-[var(--body-gutter)] md:gap-20 lg:gap-25"
-					>
+					<div className="relative flex w-full flex-row gap-10 overflow-x-auto px-4 py-[var(--body-gutter)] md:gap-20 lg:gap-25">
 						{album.images.map((image) => {
 							const imageDimensions = getImageDimensions({
 								height: 500,
 								src: image.asset._ref,
 							})
-							
+
 							const srcSet = heights
-								.map(h => {
-									const w = Math.round(h * imageDimensions.aspectRatio)
+								.map((h) => {
+									const w = Math.round(h.size * imageDimensions.aspectRatio)
 									return `${urlFor(image.asset._ref)
-										.height(h)
-										.width(w)
+										.height(Math.round(h.size * h.pixelRatio))
+										.width(Math.round(w * h.pixelRatio))
 										.format("webp")
 										.quality(95)
 										.url()} ${w}w`
 								})
 								.join(", ")
-								
+
 							return (
 								<div key={image._key} className="contents">
 									<img
@@ -57,7 +58,9 @@ export default async function HomePage() {
 								</div>
 							)
 						})}
-						{process.env.NODE_ENV === 'production' ?<div className="absolute inset-0" />:null}
+						{process.env.NODE_ENV === "production" ? (
+							<div className="absolute inset-0" />
+						) : null}
 					</div>
 					<div className="flex gap-2 px-4 text-sm">
 						<p>{album.title}</p> - <PortableText value={album.excerpt} />
