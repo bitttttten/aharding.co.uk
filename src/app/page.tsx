@@ -2,8 +2,6 @@ import { getHomepageAlbums } from "@/api/photos"
 import { urlFor } from "@/lib/sanity-image"
 import { PortableText } from "@portabletext/react"
 
-const height = 800
-
 export default async function HomePage() {
 	const albums = await getHomepageAlbums()
 	return (
@@ -16,7 +14,7 @@ export default async function HomePage() {
 					>
 						{album.images.map((image) => {
 							const imageDimensions = getImageDimensions({
-								height,
+								height: 500,
 								src: image.asset._ref,
 							})
 							return (
@@ -25,6 +23,8 @@ export default async function HomePage() {
 										src={urlFor(image.asset._ref)
 											.height(imageDimensions.height * 2)
 											.width(imageDimensions.width * 2)
+											.format("webp")
+											.quality(95)
 											.url()}
 										alt="Photography"
 										height={imageDimensions.height}
