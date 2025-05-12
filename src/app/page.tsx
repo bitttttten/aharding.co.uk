@@ -11,7 +11,6 @@ export default async function HomePage() {
 			{albums.map((album, index) => (
 				<div key={album._id}>
 					<div
-						data-testid="album-gallery"
 						className="relative flex w-full flex-row gap-10 overflow-x-auto px-4 py-[var(--body-gutter)] md:gap-20 lg:gap-25"
 					>
 						{album.images.map((image) => {
