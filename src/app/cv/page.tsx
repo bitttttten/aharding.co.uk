@@ -1,3 +1,5 @@
+"use client"
+
 function playAudio() {
 	const audio = new Audio("/public_audio_aaron.mp3")
 	audio.play()
