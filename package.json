@@ -17,10 +17,13 @@
 		"test": "vitest run"
 	},
 	"dependencies": {
+		"@base-ui/react": "^1.5.0",
 		"@portabletext/react": "^3.2.1",
+		"@radix-ui/react-slot": "^1.2.4",
 		"@sanity/client": "^7.1.0",
 		"@sanity/image-url": "^1.1.0",
 		"@t3-oss/env-nextjs": "^0.12.0",
+		"clsx": "^2.1.1",
 		"groq": "^3.88.1",
 		"next": "^16.2.6",
 		"picosanity": "^5.0.0",
